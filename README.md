@@ -10,7 +10,7 @@ Game where you play as a crab in pipes. You can go left.. or right. Thats all.
 
 2-nd day: Add more elements to the game
 - [X] Macroquad storage/scene look
-- [ ] Add wall/ceiling climbing
+- [X] Add wall climbing
 - [ ] Water flow
 - [ ] Button/valve system
 - [ ] Menu

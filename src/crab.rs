@@ -1,3 +1,5 @@
+use std::f32::consts::FRAC_PI_2;
+
 use macroquad::prelude::{collections::storage, scene::Node, *};
 
 use crate::assets::Assets;
@@ -5,6 +7,7 @@ use crate::assets::Assets;
 pub struct Crab {
     pub position: Vec2,
     speed: i8,
+    rotation: f32,
 }
 
 impl Crab {
@@ -16,6 +19,7 @@ impl Crab {
                 (tiles.raw_tiled_map.width as f32) / 2.,
                 tiles.raw_tiled_map.height as f32 - 1.5,
             ),
+            rotation: 0.,
         }
     }
 }
@@ -31,22 +35,62 @@ impl Node for Crab {
         };
         crab.speed = clamp(crab.speed, -10, 10);
         crab.position.x += crab.speed as f32 * CRAB_SPEED;
+        // Gravity
+        crab.position.y += 0.1;
 
         let tiles = &storage::get::<Assets>().tiles;
-        let left_tile = tiles.get_tile(
-            "main",
-            (crab.position.x - 0.5).floor() as u32,
-            crab.position.y as u32,
-        );
-        let right_tile = tiles.get_tile(
-            "main",
-            (crab.position.x + 0.5).floor() as u32,
-            crab.position.y as u32,
-        );
-        if left_tile.is_some() {
-            crab.position.x = crab.position.x.floor() + 0.5;
-        } else if right_tile.is_some() {
-            crab.position.x = crab.position.x.ceil() - 0.5;
+
+        // 0 1
+        // 2 3
+        let collide = |crab: &scene::RefMut<Crab>| {
+            [
+                (
+                    (crab.position.x - 0.5).floor() as u32,
+                    (crab.position.y - 0.5).floor() as u32,
+                ),
+                (
+                    (crab.position.x - 0.5).ceil() as u32,
+                    (crab.position.y - 0.5).floor() as u32,
+                ),
+                (
+                    (crab.position.x - 0.5).floor() as u32,
+                    (crab.position.y - 0.5).ceil() as u32,
+                ),
+                (
+                    (crab.position.x - 0.5).ceil() as u32,
+                    (crab.position.y - 0.5).ceil() as u32,
+                ),
+            ]
+            .into_iter()
+            .enumerate()
+            .filter_map(|(idx, (x, y))| tiles.get_tile("main", x, y).as_ref().map(|_| idx))
+            .collect::<Vec<_>>()
+        };
+        crab.rotation = match &collide(&crab)[..] {
+            [2, 3] | [2] | [3] => {
+                crab.position.y = (crab.position.y + 0.5).floor() - 0.5;
+                0.
+            }
+            [1, 2, 3] | [1, 3] => {
+                crab.position.x = crab.position.x.ceil() - 0.5;
+                crab.position.y -= 0.1;
+                crab.position.y -= crab.speed as f32 * CRAB_SPEED;
+                -FRAC_PI_2
+            }
+            [0, 2, 3] | [0, 2] => {
+                crab.position.x = crab.position.x.floor() + 0.5;
+                crab.position.y -= 0.1;
+                crab.position.y += crab.speed as f32 * CRAB_SPEED;
+                FRAC_PI_2
+            }
+            [] => 0.,
+            collisions => unreachable!("{:?}", collisions),
+        };
+        match &collide(&crab)[..] {
+            [0, 1] => {
+                crab.position.y = crab.position.y.floor() + 0.5;
+            }
+            _ => {}
         }
     }
 
@@ -76,6 +120,7 @@ impl Node for Crab {
             DrawTextureParams {
                 dest_size: Some(Vec2::new(1., 1.)),
                 flip_x: crab.speed < 0,
+                rotation: crab.rotation,
                 ..Default::default()
             },
         );
@@ -117,4 +162,4 @@ fn get_controls() -> Controls {
     }
 }
 
-const CRAB_SPEED: f32 = 1. / 60.;
+const CRAB_SPEED: f32 = 0.75 / 60.;

@@ -1,3 +1,4 @@
+#![feature(is_some_with)]
 use assets::Assets;
 use crab::Crab;
 use macroquad::experimental::collections::storage;
@@ -10,8 +11,8 @@ mod crab;
 #[macroquad::main("Crab's pipe")]
 async fn main() {
     storage::store(Assets::create().await);
-    add_node(Crab::create());
     add_node(Tiles::create());
+    add_node(Crab::create());
     loop {
         clear_background(WHITE);
         next_frame().await;
