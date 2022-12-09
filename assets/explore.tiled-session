@@ -26,11 +26,11 @@
             }
         },
         "level.tmx": {
-            "scale": 0.5542,
+            "scale": 0.5531770833333333,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 553.9516420064957,
-                "y": 680.2598339949476
+                "x": 961.717352415027,
+                "y": 641.7474814047644
             }
         }
     },
@@ -41,13 +41,14 @@
     "map.lastUsedFormat": "tmx",
     "map.width": 60,
     "openFiles": [
+        "level.json",
         "level.tmx"
     ],
     "project": "explore.tiled-project",
     "recentFiles": [
         "level.json",
-        "basic.tsj",
         "level.tmx",
+        "basic.tsj",
         "basic.tsx"
     ],
     "tileset.lastUsedFormat": "json"

@@ -22,6 +22,7 @@ async fn main() {
     let tiles_json = load_string("assets/level.json").await.unwrap();
     let tileset = load_texture("assets/tileset.png").await.unwrap();
     let basic = load_string("assets/basic.tsj").await.unwrap();
+    let crab = load_texture("assets/crab.png").await.unwrap();
     let tiles = tiled::load_map(
         &tiles_json,
         &[("tileset.png", tileset)],
@@ -41,11 +42,11 @@ async fn main() {
     loop {
         let height = screen_height();
         let width = screen_width();
-        let scale = height / 10.;
+        let scale = height / 5.;
 
         let controls = get_controls();
         update(&mut world, controls);
-        draw(&world, width / scale, height / scale);
+        draw(&world, width / scale, height / scale, crab);
         next_frame().await;
     }
 }
@@ -90,7 +91,7 @@ fn update(world: &mut World, controls: Controls) {
     };
     world.crab.speed = clamp(world.crab.speed, -10, 10);
     world.crab.position.x += world.crab.speed as f32 * CRAB_SPEED;
-    // Left
+
     let left_tile = world.tiles.get_tile(
         "main",
         (world.crab.position.x - 0.5).floor() as u32,
@@ -108,7 +109,7 @@ fn update(world: &mut World, controls: Controls) {
     }
 }
 
-fn draw(world: &World, width: f32, height: f32) {
+fn draw(world: &World, width: f32, height: f32, crab: Texture2D) {
     clear_background(WHITE);
     world.tiles.draw_tiles(
         "main",
@@ -120,7 +121,17 @@ fn draw(world: &World, width: f32, height: f32) {
         },
         None,
     );
-    draw_circle(world.crab.position.x, world.crab.position.y, 0.5, RED);
+    draw_texture_ex(
+        crab,
+        world.crab.position.x - 0.5,
+        world.crab.position.y - 0.5,
+        WHITE,
+        DrawTextureParams {
+            dest_size: Some(Vec2::new(1., 1.)),
+            flip_x: world.crab.speed < 0,
+            ..Default::default()
+        },
+    );
     let camera = Camera2D::from_display_rect(Rect {
         x: world.crab.position.x - width / 2.,
         y: (world.crab.position.y + 1.) - height,

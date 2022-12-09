@@ -3,7 +3,7 @@
 Game where you play as a crab in pipes. You can go left.. or right. Thats all.
 
 1-st day: Make a crab walking left/right in android by touch and other platforms. Draw a crab)
-- [ ] Draw a crab
+- [X] Draw a crab
 - [X] Walking scene
 - [X] Camera movement
 - [X] win/lin/wasm builds
