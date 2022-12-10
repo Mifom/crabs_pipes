@@ -3,33 +3,47 @@ use macroquad::prelude::{
     scene::{add_node, Node},
     *,
 };
+use macroquad_tiled::Map;
 
-use crate::{assets::Assets, crab::Crab};
+use crate::{
+    assets::Assets,
+    crab::{Crab, Item},
+};
 
 pub struct Level(pub usize);
-struct Stop(bool);
+pub enum State {
+    Back,
+    Running,
+    Complete,
+}
 
-pub async fn loop_level(level: usize) {
+pub async fn loop_level(level: usize) -> bool {
+    let (tiles, item_position) = &storage::get::<Assets>().tilemaps[level];
     storage::store(Level(level));
-    storage::store(Stop(false));
-    add_node(Tiles::create());
+    storage::store(State::Running);
+    add_node(Tiles::create(tiles));
     add_node(Crab::create());
-    loop {
+    add_node(Item {
+        position: *item_position,
+    });
+    let res = loop {
         clear_background(WHITE);
         next_frame().await;
-        if storage::get::<Stop>().0 {
-            break;
+        match *storage::get::<State>() {
+            State::Back => break false,
+            State::Running => {}
+            State::Complete => break true,
         }
-    }
+    };
     scene::clear();
+    res
 }
 struct Tiles {
     rect: Rect,
 }
 
 impl Tiles {
-    fn create() -> Self {
-        let tiles = &storage::get::<Assets>().tilemaps[storage::get::<Level>().0];
+    fn create(tiles: &Map) -> Self {
         Self {
             rect: Rect {
                 x: 0.,
@@ -47,15 +61,15 @@ impl Node for Tiles {
         Self: Sized,
     {
         let tiles = &storage::get::<Assets>().tilemaps[storage::get::<Level>().0];
-        tiles.draw_tiles("main", node.rect, None);
+        tiles.0.draw_tiles("main", node.rect, None);
     }
 
     fn update(_node: scene::RefMut<Self>)
     where
         Self: Sized,
     {
-        if is_key_pressed(KeyCode::Q) {
-            storage::store(Stop(true));
+        if is_key_pressed(KeyCode::Escape) {
+            storage::store(State::Back);
         }
     }
 }

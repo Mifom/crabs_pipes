@@ -6,36 +6,44 @@ use macroquad_tiled as tiled;
 
 pub struct Assets {
     pub crab: Texture2D,
-    pub tilemaps: Vec<tiled::Map>,
+    pub diamond: Texture2D,
+    pub tilemaps: Vec<(tiled::Map, Vec2)>,
     pub ui: Ui,
 }
 
 const TILESET: &[u8] = include_bytes!("../assets/tileset.png");
 const BASIC: &str = include_str!("../assets/basic.tsj");
 const CRAB: &[u8] = include_bytes!("../assets/crab.png");
-const TILEMAPS: [&str; 1] = [include_str!("../assets/level.json")];
+const DIAMOND: &[u8] = include_bytes!("../assets/diamond.png");
 const TEXT_COLOR: Color = Color::new(0.8, 0.2, 0.2, 1.);
 const BUTTON_COLOR: Color = Color::new(0.6, 0.6, 0.6, 1.);
 const BUTTON_HOVERED_COLOR: Color = Color::new(0.4, 0.4, 0.4, 1.);
 
+const TILEMAPS: [(&str, Vec2); 1] = [(include_str!("../assets/level.json"), Vec2::new(58.5, 34.5))];
+
 impl Assets {
     pub fn create() -> Self {
         let crab = Texture2D::from_file_with_format(CRAB, None);
+        let diamond = Texture2D::from_file_with_format(DIAMOND, None);
         let tileset = Texture2D::from_file_with_format(TILESET, None);
         let tilemaps = TILEMAPS
             .iter()
-            .map(|tilemap| {
-                tiled::load_map(
-                    tilemap,
-                    &[("tileset.png", tileset)],
-                    &[("basic.tsj", BASIC)],
-                )
+            .map(|(tilemap, pos)| -> Result<_, tiled::Error> {
+                Ok((
+                    tiled::load_map(
+                        tilemap,
+                        &[("tileset.png", tileset)],
+                        &[("basic.tsj", BASIC)],
+                    )?,
+                    *pos,
+                ))
             })
             .try_collect()
             .unwrap();
 
         Self {
             crab,
+            diamond,
             tilemaps,
             ui: Ui::create(),
         }

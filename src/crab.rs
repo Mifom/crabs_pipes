@@ -7,7 +7,10 @@ use macroquad::prelude::{
     *,
 };
 
-use crate::{assets::Assets, level::Level};
+use crate::{
+    assets::Assets,
+    level::{self, Level},
+};
 
 pub struct Crab {
     pub position: Vec2,
@@ -19,7 +22,7 @@ pub struct Crab {
 
 impl Crab {
     pub fn create() -> Self {
-        let tiles = &storage::get::<Assets>().tilemaps[storage::get::<Level>().0];
+        let (tiles, _) = &storage::get::<Assets>().tilemaps[storage::get::<Level>().0];
         Self {
             speed: 0,
             position: Vec2::new(
@@ -28,8 +31,8 @@ impl Crab {
             ),
             rotation: 0.,
             animation: AnimatedSprite::new(
-                100,
-                100,
+                200,
+                200,
                 &[
                     Animation {
                         name: "idle".to_owned(),
@@ -76,9 +79,9 @@ impl Node for Crab {
         }
         crab.position.x += crab.speed as f32 * CRAB_SPEED;
         // Gravity
-        crab.position.y += 0.1;
+        crab.position.y += 0.15;
 
-        let tiles = &storage::get::<Assets>().tilemaps[storage::get::<Level>().0];
+        let (tiles, item_position) = &storage::get::<Assets>().tilemaps[storage::get::<Level>().0];
 
         // 0 1
         // 2 3
@@ -131,6 +134,9 @@ impl Node for Crab {
                 crab.position.y = crab.position.y.floor() + 0.5;
             }
             _ => {}
+        }
+        if item_position.distance(crab.position) <= 1. {
+            storage::store(level::State::Complete);
         }
     }
 
@@ -205,3 +211,25 @@ fn get_controls() -> Controls {
 }
 
 const CRAB_SPEED: f32 = 0.75 / 60.;
+
+pub struct Item {
+    pub position: Vec2,
+}
+
+impl Node for Item {
+    fn draw(item: scene::RefMut<Self>)
+    where
+        Self: Sized,
+    {
+        draw_texture_ex(
+            storage::get::<Assets>().diamond,
+            item.position.x - 0.5,
+            item.position.y - 0.5,
+            WHITE,
+            DrawTextureParams {
+                dest_size: Some(Vec2::new(1., 1.)),
+                ..Default::default()
+            },
+        );
+    }
+}
