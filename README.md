@@ -18,10 +18,9 @@ Game where you play as a crab in pipes. You can go left.. or right. Thats all.
 3-rd day: Add more graphics/sfx to the game
 - [X] Item
 - [X] SFX
-- [ ] Button/valve system
+- [X] Ambient music
 - [ ] Tile graphics
-- [ ] Ambient music
-- [ ] Levels
+- [ ] Button/valve system
 
 4-th day: polish the game and release it
 - [ ] Levels

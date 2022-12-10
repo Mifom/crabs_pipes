@@ -12,6 +12,7 @@ pub struct Assets {
     pub ui: Ui,
     pub item_picked: Sound,
     pub step: Sound,
+    pub piped: Sound,
 }
 
 const TEXT_COLOR: Color = Color::new(0.8, 0.2, 0.2, 1.);
@@ -24,6 +25,7 @@ const CRAB: &[u8] = include_bytes!("../assets/crab.png");
 const DIAMOND: &[u8] = include_bytes!("../assets/diamond.png");
 const ITEM_PICKED: &[u8] = include_bytes!("../assets/item.ogg");
 const STEP: &[u8] = include_bytes!("../assets/step.ogg");
+const PIPED: &[u8] = include_bytes!("../assets/Piped.ogg");
 
 const TILEMAPS: [(&str, Vec2); 1] = [(include_str!("../assets/level.json"), Vec2::new(58.5, 34.5))];
 
@@ -49,6 +51,7 @@ impl Assets {
 
         let item_picked = audio::load_sound_from_bytes(ITEM_PICKED).await.unwrap();
         let step = audio::load_sound_from_bytes(STEP).await.unwrap();
+        let piped = audio::load_sound_from_bytes(PIPED).await.unwrap();
         Self {
             crab,
             diamond,
@@ -56,6 +59,7 @@ impl Assets {
             ui: Ui::create(),
             item_picked,
             step,
+            piped,
         }
     }
 }

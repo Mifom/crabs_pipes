@@ -1,7 +1,7 @@
 use std::f32::consts::FRAC_PI_2;
 
 use macroquad::{
-    audio::play_sound_once,
+    audio::{play_sound, play_sound_once, PlaySoundParams},
     prelude::{
         animation::{AnimatedSprite, Animation},
         collections::storage,
@@ -151,7 +151,13 @@ impl Node for Crab {
         crab.step = clamp(crab.step - 1. / 60., 0., 0.2);
         if crab.step == 0. && crab.speed != 0 && !in_air {
             crab.step = 0.16;
-            play_sound_once(storage::get::<Assets>().step);
+            play_sound(
+                storage::get::<Assets>().step,
+                PlaySoundParams {
+                    looped: false,
+                    volume: 0.3,
+                },
+            );
         }
     }
 

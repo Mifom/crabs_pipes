@@ -1,7 +1,10 @@
-use macroquad::prelude::{
-    collections::storage,
-    scene::{add_node, Node},
-    *,
+use macroquad::{
+    audio::{play_sound, stop_sound, PlaySoundParams},
+    prelude::{
+        collections::storage,
+        scene::{add_node, Node},
+        *,
+    },
 };
 use macroquad_tiled::Map;
 
@@ -18,6 +21,14 @@ pub enum State {
 }
 
 pub async fn loop_level(level: usize) -> bool {
+    let piped = storage::get::<Assets>().piped;
+    play_sound(
+        piped,
+        PlaySoundParams {
+            looped: true,
+            volume: 0.15,
+        },
+    );
     let (tiles, item_position) = &storage::get::<Assets>().tilemaps[level];
     storage::store(Level(level));
     storage::store(State::Running);
@@ -36,6 +47,7 @@ pub async fn loop_level(level: usize) -> bool {
         }
     };
     scene::clear();
+    stop_sound(piped);
     res
 }
 struct Tiles {
