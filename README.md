@@ -11,14 +11,14 @@ Game where you play as a crab in pipes. You can go left.. or right. Thats all.
 2-nd day: Add more elements to the game
 - [X] Macroquad storage/scene look
 - [X] Add wall climbing
-- [ ] Water flow
-- [ ] Button/valve system
-- [ ] Menu
+- [X] Crab animation
+- [X] Crab idle animation
+- [X] Menu
 
 3-rd day: Add more graphics/sfx to the game
+- [ ] Water flow
+- [ ] Button/valve system
 - [ ] Tile graphics
-- [ ] Crab animation
-- [ ] Crab idle animation (?)
 - [ ] Ambuent music
 - [ ] SFX
 - [ ] Levels

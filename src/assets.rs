@@ -3,7 +3,7 @@ use macroquad_tiled as tiled;
 
 pub struct Assets {
     pub crab: Texture2D,
-    pub tiles: tiled::Map,
+    pub tilemaps: Vec<tiled::Map>,
 }
 
 impl Assets {
@@ -19,7 +19,7 @@ impl Assets {
         .unwrap();
         Self {
             crab: load_texture("assets/crab.png").await.unwrap(),
-            tiles,
+            tilemaps: vec![tiles],
         }
     }
 }

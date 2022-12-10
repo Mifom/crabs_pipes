@@ -1,18 +1,25 @@
 use std::f32::consts::FRAC_PI_2;
 
-use macroquad::prelude::{collections::storage, scene::Node, *};
+use macroquad::prelude::{
+    animation::{AnimatedSprite, Animation},
+    collections::storage,
+    scene::Node,
+    *,
+};
 
-use crate::assets::Assets;
+use crate::{assets::Assets, level::Level};
 
 pub struct Crab {
     pub position: Vec2,
     speed: i8,
     rotation: f32,
+    animation: AnimatedSprite,
+    facing: bool,
 }
 
 impl Crab {
     pub fn create() -> Self {
-        let tiles = &storage::get::<Assets>().tiles;
+        let tiles = &storage::get::<Assets>().tilemaps[storage::get::<Level>().0];
         Self {
             speed: 0,
             position: Vec2::new(
@@ -20,10 +27,37 @@ impl Crab {
                 tiles.raw_tiled_map.height as f32 - 1.5,
             ),
             rotation: 0.,
+            animation: AnimatedSprite::new(
+                100,
+                100,
+                &[
+                    Animation {
+                        name: "idle".to_owned(),
+                        row: 0,
+                        frames: 20,
+                        fps: 12,
+                    },
+                    Animation {
+                        name: "walk".to_owned(),
+                        row: 1,
+                        frames: 3,
+                        fps: 12,
+                    },
+                ],
+                true,
+            ),
+            facing: false,
         }
     }
 }
 impl Node for Crab {
+    fn ready(mut crab: scene::RefMut<Self>)
+    where
+        Self: Sized,
+    {
+        crab.animation.set_animation(0);
+    }
+
     fn fixed_update(mut crab: scene::RefMut<Self>)
     where
         Self: Sized,
@@ -34,11 +68,17 @@ impl Node for Crab {
             Controls::Right => 1,
         };
         crab.speed = clamp(crab.speed, -10, 10);
+        if crab.speed == 0 {
+            crab.animation.set_animation(0);
+        } else {
+            crab.facing = crab.speed < 0;
+            crab.animation.set_animation(1);
+        }
         crab.position.x += crab.speed as f32 * CRAB_SPEED;
         // Gravity
         crab.position.y += 0.1;
 
-        let tiles = &storage::get::<Assets>().tiles;
+        let tiles = &storage::get::<Assets>().tilemaps[storage::get::<Level>().0];
 
         // 0 1
         // 2 3
@@ -94,7 +134,7 @@ impl Node for Crab {
         }
     }
 
-    fn draw(crab: scene::RefMut<Self>)
+    fn draw(mut crab: scene::RefMut<Self>)
     where
         Self: Sized,
     {
@@ -112,14 +152,16 @@ impl Node for Crab {
         });
         scene::set_camera(0, Some(camera));
 
+        crab.animation.update();
         draw_texture_ex(
             storage::get::<Assets>().crab,
             crab.position.x - 0.5,
             crab.position.y - 0.5,
             WHITE,
             DrawTextureParams {
+                source: Some(crab.animation.frame().source_rect),
                 dest_size: Some(Vec2::new(1., 1.)),
-                flip_x: crab.speed < 0,
+                flip_x: crab.facing,
                 rotation: crab.rotation,
                 ..Default::default()
             },
