@@ -1,10 +1,13 @@
 use std::f32::consts::FRAC_PI_2;
 
-use macroquad::prelude::{
-    animation::{AnimatedSprite, Animation},
-    collections::storage,
-    scene::Node,
-    *,
+use macroquad::{
+    audio::play_sound_once,
+    prelude::{
+        animation::{AnimatedSprite, Animation},
+        collections::storage,
+        scene::Node,
+        *,
+    },
 };
 
 use crate::{
@@ -18,6 +21,7 @@ pub struct Crab {
     rotation: f32,
     animation: AnimatedSprite,
     facing: bool,
+    step: f32,
 }
 
 impl Crab {
@@ -50,6 +54,7 @@ impl Crab {
                 true,
             ),
             facing: false,
+            step: 0.,
         }
     }
 }
@@ -109,6 +114,7 @@ impl Node for Crab {
             .filter_map(|(idx, (x, y))| tiles.get_tile("main", x, y).as_ref().map(|_| idx))
             .collect::<Vec<_>>()
         };
+        let mut in_air = false;
         crab.rotation = match &collide(&crab)[..] {
             [2, 3] | [2] | [3] => {
                 crab.position.y = (crab.position.y + 0.5).floor() - 0.5;
@@ -126,7 +132,10 @@ impl Node for Crab {
                 crab.position.y += crab.speed as f32 * CRAB_SPEED;
                 FRAC_PI_2
             }
-            [] => 0.,
+            [] => {
+                in_air = true;
+                0.
+            }
             collisions => unreachable!("{:?}", collisions),
         };
         match &collide(&crab)[..] {
@@ -136,7 +145,13 @@ impl Node for Crab {
             _ => {}
         }
         if item_position.distance(crab.position) <= 1. {
+            play_sound_once(storage::get::<Assets>().item_picked);
             storage::store(level::State::Complete);
+        }
+        crab.step = clamp(crab.step - 1. / 60., 0., 0.2);
+        if crab.step == 0. && crab.speed != 0 && !in_air {
+            crab.step = 0.16;
+            play_sound_once(storage::get::<Assets>().step);
         }
     }
 

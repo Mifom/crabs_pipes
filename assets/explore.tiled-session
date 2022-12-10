@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "level.tmx",
+    "activeFile": "level.json",
     "expandedProjectPaths": [
         "."
     ],
@@ -21,8 +21,8 @@
             "scale": 0.4693,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 943.9590880034093,
-                "y": 624.3341146388237
+                "x": 946.0899211591733,
+                "y": 624.3341146388236
             }
         },
         "level.tmx": {
@@ -41,8 +41,7 @@
     "map.lastUsedFormat": "tmx",
     "map.width": 60,
     "openFiles": [
-        "level.json",
-        "level.tmx"
+        "level.json"
     ],
     "project": "explore.tiled-project",
     "recentFiles": [

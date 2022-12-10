@@ -1,4 +1,5 @@
 use macroquad::{
+    audio::{self, Sound},
     prelude::*,
     ui::{root_ui, Skin},
 };
@@ -9,20 +10,25 @@ pub struct Assets {
     pub diamond: Texture2D,
     pub tilemaps: Vec<(tiled::Map, Vec2)>,
     pub ui: Ui,
+    pub item_picked: Sound,
+    pub step: Sound,
 }
+
+const TEXT_COLOR: Color = Color::new(0.8, 0.2, 0.2, 1.);
+const BUTTON_COLOR: Color = Color::new(0.6, 0.6, 0.6, 1.);
+const BUTTON_HOVERED_COLOR: Color = Color::new(0.4, 0.4, 0.4, 1.);
 
 const TILESET: &[u8] = include_bytes!("../assets/tileset.png");
 const BASIC: &str = include_str!("../assets/basic.tsj");
 const CRAB: &[u8] = include_bytes!("../assets/crab.png");
 const DIAMOND: &[u8] = include_bytes!("../assets/diamond.png");
-const TEXT_COLOR: Color = Color::new(0.8, 0.2, 0.2, 1.);
-const BUTTON_COLOR: Color = Color::new(0.6, 0.6, 0.6, 1.);
-const BUTTON_HOVERED_COLOR: Color = Color::new(0.4, 0.4, 0.4, 1.);
+const ITEM_PICKED: &[u8] = include_bytes!("../assets/item.ogg");
+const STEP: &[u8] = include_bytes!("../assets/step.ogg");
 
 const TILEMAPS: [(&str, Vec2); 1] = [(include_str!("../assets/level.json"), Vec2::new(58.5, 34.5))];
 
 impl Assets {
-    pub fn create() -> Self {
+    pub async fn create() -> Self {
         let crab = Texture2D::from_file_with_format(CRAB, None);
         let diamond = Texture2D::from_file_with_format(DIAMOND, None);
         let tileset = Texture2D::from_file_with_format(TILESET, None);
@@ -41,11 +47,15 @@ impl Assets {
             .try_collect()
             .unwrap();
 
+        let item_picked = audio::load_sound_from_bytes(ITEM_PICKED).await.unwrap();
+        let step = audio::load_sound_from_bytes(STEP).await.unwrap();
         Self {
             crab,
             diamond,
             tilemaps,
             ui: Ui::create(),
+            item_picked,
+            step,
         }
     }
 }

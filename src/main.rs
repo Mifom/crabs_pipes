@@ -17,7 +17,7 @@ enum State {
 
 #[macroquad::main("Crab's pipe")]
 async fn main() {
-    storage::store(Assets::create());
+    storage::store(Assets::create().await);
     let mut state = State::Menu;
     loop {
         match state {
