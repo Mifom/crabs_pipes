@@ -19,7 +19,7 @@ Game where you play as a crab in pipes. You can go left.. or right. Thats all.
 - [ ] Water flow
 - [ ] Button/valve system
 - [ ] Tile graphics
-- [ ] Ambuent music
+- [ ] Ambient music
 - [ ] SFX
 - [ ] Levels
 

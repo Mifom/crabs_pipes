@@ -7,16 +7,17 @@ use macroquad::prelude::{
 use crate::{assets::Assets, crab::Crab};
 
 pub struct Level(pub usize);
-struct Stop;
+struct Stop(bool);
 
 pub async fn loop_level(level: usize) {
     storage::store(Level(level));
+    storage::store(Stop(false));
     add_node(Tiles::create());
     add_node(Crab::create());
     loop {
         clear_background(WHITE);
         next_frame().await;
-        if storage::try_get::<Stop>().is_some() {
+        if storage::get::<Stop>().0 {
             break;
         }
     }
@@ -54,7 +55,7 @@ impl Node for Tiles {
         Self: Sized,
     {
         if is_key_pressed(KeyCode::Q) {
-            storage::store(Stop);
+            storage::store(Stop(true));
         }
     }
 }

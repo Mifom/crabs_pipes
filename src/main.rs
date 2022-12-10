@@ -1,4 +1,5 @@
 #![feature(is_some_with)]
+#![feature(iterator_try_collect)]
 use assets::Assets;
 use level::loop_level;
 use macroquad::experimental::collections::storage;
@@ -16,7 +17,7 @@ enum State {
 
 #[macroquad::main("Crab's pipe")]
 async fn main() {
-    storage::store(Assets::create().await);
+    storage::store(Assets::create());
     let mut state = State::Menu;
     loop {
         match state {
