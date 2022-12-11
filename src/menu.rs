@@ -8,7 +8,7 @@ use crate::assets::Assets;
 const WINDOW_WIDTH: f32 = 300.;
 const WINDOW_HEIGHT: f32 = 250.;
 
-pub async fn loop_menu() -> usize {
+pub async fn loop_menu(last_level: usize) -> usize {
     let mut level = None;
     loop {
         if let Some(level) = level {
@@ -27,7 +27,7 @@ pub async fn loop_menu() -> usize {
                 ui.label(None, "Crab's Pipe");
                 ui.separator();
                 if ui.button(None, "  Play  ") {
-                    level = Some(0);
+                    level = Some(last_level);
                 }
                 if ui.button(None, "  Exit  ") {
                     std::process::exit(0);

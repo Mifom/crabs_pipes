@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "level.json",
+    "activeFile": "level_2.json",
     "expandedProjectPaths": [
         "."
     ],
@@ -32,22 +32,41 @@
                 "x": 961.717352415027,
                 "y": 641.7474814047644
             }
+        },
+        "level_2.json": {
+            "scale": 0.5531770833333333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 961.717352415027,
+                "y": 616.4391300254214
+            }
+        },
+        "level_2.tmx": {
+            "scale": 0.5531770833333333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 961.717352415027,
+                "y": 641.7474814047644
+            }
         }
     },
     "last.exportedFilePath": "/home/mifom/dev/foss/explore/assets",
     "last.imagePath": "/home/mifom/dev/foss/explore/assets",
     "map.height": 40,
     "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
-    "map.lastUsedFormat": "tmx",
+    "map.lastUsedFormat": "json",
     "map.width": 60,
     "openFiles": [
         "level.json",
-        "basic.tsj"
+        "basic.tsj",
+        "level_2.json"
     ],
     "project": "explore.tiled-project",
     "recentFiles": [
-        "basic.tsj",
         "level.json",
+        "basic.tsj",
+        "level_2.json",
+        "level_2.tmx",
         "level.tmx",
         "basic.tsx"
     ],

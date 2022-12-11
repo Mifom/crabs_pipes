@@ -120,13 +120,13 @@ impl Node for Crab {
                 crab.position.y = (crab.position.y + 0.5).floor() - 0.5;
                 0.
             }
-            [1, 2, 3] | [1, 3] => {
+            [1, 2, 3] | [1, 3] | [1] => {
                 crab.position.x = crab.position.x.ceil() - 0.5;
                 crab.position.y -= 0.1;
                 crab.position.y -= crab.speed as f32 * CRAB_SPEED;
                 -FRAC_PI_2
             }
-            [0, 2, 3] | [0, 2] => {
+            [0, 2, 3] | [0, 2] | [0] => {
                 crab.position.x = crab.position.x.floor() + 0.5;
                 crab.position.y -= 0.1;
                 crab.position.y += crab.speed as f32 * CRAB_SPEED;
@@ -155,7 +155,7 @@ impl Node for Crab {
                 storage::get::<Assets>().step,
                 PlaySoundParams {
                     looped: false,
-                    volume: 0.3,
+                    volume: 0.2,
                 },
             );
         }

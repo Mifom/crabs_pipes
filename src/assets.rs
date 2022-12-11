@@ -27,7 +27,15 @@ const ITEM_PICKED: &[u8] = include_bytes!("../assets/item.ogg");
 const STEP: &[u8] = include_bytes!("../assets/step.ogg");
 const PIPED: &[u8] = include_bytes!("../assets/Piped.ogg");
 
-const TILEMAPS: [(&str, Vec2); 1] = [(include_str!("../assets/level.json"), Vec2::new(58.5, 34.5))];
+const TILEMAPS: [(&str, Vec2); 2] = [
+    (include_str!("../assets/level.json"), Vec2::new(58.5, 34.5)),
+    (
+        include_str!("../assets/level_2.json"),
+        Vec2::new(42.5, 30.5),
+    ),
+];
+
+pub const LEVEL_NUM: usize = TILEMAPS.len();
 
 impl Assets {
     pub async fn create() -> Self {
