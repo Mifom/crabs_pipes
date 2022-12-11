@@ -44,18 +44,18 @@ impl Assets {
         let tileset = Texture2D::from_file_with_format(TILESET, None);
         let tilemaps = TILEMAPS
             .iter()
-            .map(|(tilemap, pos)| -> Result<_, tiled::Error> {
-                Ok((
+            .map(|(tilemap, pos)| {
+                (
                     tiled::load_map(
                         tilemap,
                         &[("tileset.png", tileset)],
                         &[("basic.tsj", BASIC)],
-                    )?,
+                    )
+                    .unwrap(),
                     *pos,
-                ))
+                )
             })
-            .try_collect()
-            .unwrap();
+            .collect();
 
         let item_picked = audio::load_sound_from_bytes(ITEM_PICKED).await.unwrap();
         let step = audio::load_sound_from_bytes(STEP).await.unwrap();

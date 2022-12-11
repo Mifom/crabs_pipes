@@ -161,7 +161,7 @@ impl Node for Crab {
         }
     }
 
-    fn draw(mut crab: scene::RefMut<Self>)
+    fn update(crab: scene::RefMut<Self>)
     where
         Self: Sized,
     {
@@ -178,7 +178,12 @@ impl Node for Crab {
             h: height,
         });
         scene::set_camera(0, Some(camera));
+    }
 
+    fn draw(mut crab: scene::RefMut<Self>)
+    where
+        Self: Sized,
+    {
         crab.animation.update();
         draw_texture_ex(
             storage::get::<Assets>().crab,
