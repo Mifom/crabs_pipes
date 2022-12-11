@@ -41,14 +41,19 @@
     "map.lastUsedFormat": "tmx",
     "map.width": 60,
     "openFiles": [
-        "level.json"
+        "level.json",
+        "basic.tsj"
     ],
     "project": "explore.tiled-project",
     "recentFiles": [
+        "basic.tsj",
         "level.json",
         "level.tmx",
-        "basic.tsj",
         "basic.tsx"
     ],
-    "tileset.lastUsedFormat": "json"
+    "tileset.lastUsedFormat": "json",
+    "tileset.tileSize": {
+        "height": 32,
+        "width": 32
+    }
 }

@@ -29,9 +29,6 @@ pub async fn loop_menu() -> usize {
                 if ui.button(None, "  Play  ") {
                     level = Some(0);
                 }
-                if ui.button(None, "Settings") {
-                    println!("Settings");
-                }
                 if ui.button(None, "  Exit  ") {
                     std::process::exit(0);
                 }
