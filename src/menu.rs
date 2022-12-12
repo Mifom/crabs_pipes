@@ -1,12 +1,6 @@
-use macroquad::{
-    prelude::{collections::storage, *},
-    ui::{hash, root_ui},
-};
+use macroquad::prelude::{collections::storage, *};
 
 use crate::assets::Assets;
-
-const WINDOW_WIDTH: f32 = 300.;
-const WINDOW_HEIGHT: f32 = 250.;
 
 pub async fn loop_menu(last_level: usize) -> usize {
     let mut level = None;
@@ -15,26 +9,41 @@ pub async fn loop_menu(last_level: usize) -> usize {
             return level;
         }
         clear_background(WHITE);
-        root_ui().push_skin(&storage::get::<Assets>().ui.menu_skin);
-        root_ui().window(
-            hash!(),
-            Vec2::new(
-                screen_width() / 2. - WINDOW_WIDTH / 2.,
-                screen_height() / 2. - WINDOW_HEIGHT / 2.,
-            ),
-            Vec2::new(WINDOW_WIDTH, WINDOW_HEIGHT),
-            |ui| {
-                ui.label(None, "Crab's Pipe");
-                ui.separator();
-                if ui.button(None, "  Play  ") {
-                    level = Some(last_level);
-                }
-                if ui.button(None, "  Exit  ") {
-                    std::process::exit(0);
-                }
+        let width = screen_width();
+        let height = screen_height();
+        let button_radius = height / 10.;
+        let center = Vec2::new(width / 2., height / 2.);
+        draw_text_ex(
+            "Crab's pipes",
+            center.x - 3. * button_radius,
+            center.y - 3. * button_radius,
+            TextParams {
+                font: storage::get::<Assets>().font,
+                font_size: button_radius.round() as u16,
+                color: RED,
+                ..Default::default()
             },
         );
-        root_ui().pop_skin();
+        draw_texture_ex(
+            storage::get::<Assets>().play,
+            center.x - button_radius / 2.,
+            center.y - button_radius / 2.,
+            WHITE,
+            DrawTextureParams {
+                dest_size: Some(Vec2::new(button_radius * 2., button_radius * 2.)),
+                ..Default::default()
+            },
+        );
+        if is_mouse_button_pressed(MouseButton::Left)
+            && (Vec2::from(mouse_position()) - center).length() < button_radius
+        {
+            level = Some(last_level);
+        }
+        for touch in touches() {
+            if (touch.position - center).length() < button_radius {
+                level = Some(last_level);
+            }
+        }
         next_frame().await;
     }
 }
