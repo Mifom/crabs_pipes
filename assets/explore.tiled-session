@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "level_2.json",
+    "activeFile": "basic.tsj",
     "expandedProjectPaths": [
         "."
     ],
@@ -18,11 +18,11 @@
             "scaleInEditor": 1
         },
         "level.json": {
-            "scale": 0.4693,
-            "selectedLayer": 0,
+            "scale": 0.46,
+            "selectedLayer": 1,
             "viewCenter": {
-                "x": 946.0899211591733,
-                "y": 624.3341146388236
+                "x": 947.8260869565217,
+                "y": 626.086956521739
             }
         },
         "level.tmx": {
@@ -35,10 +35,10 @@
         },
         "level_2.json": {
             "scale": 0.5531770833333333,
-            "selectedLayer": 0,
+            "selectedLayer": 1,
             "viewCenter": {
                 "x": 961.717352415027,
-                "y": 616.4391300254214
+                "y": 639.9397420205254
             }
         },
         "level_2.tmx": {
@@ -64,8 +64,8 @@
     "project": "explore.tiled-project",
     "recentFiles": [
         "level.json",
-        "basic.tsj",
         "level_2.json",
+        "basic.tsj",
         "level_2.tmx",
         "level.tmx",
         "basic.tsx"

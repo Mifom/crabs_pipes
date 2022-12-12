@@ -19,3 +19,16 @@ TODO:
 - [ ] Background
 - [ ] Button/valve system
 - [ ] Levels
+
+## Creating levels
+
+You can add levels to the game using (Tiled)[https://www.mapeditor.org/]. Create level by copying from existing levels (`assets/level{,_2}.json`) and edit it as you wish.
+There should be `main` layer with pipes and `diamond` layer with diamond. After creating you should export it as json to `assets/<level_name>.json` and insert in `src/assets.rs`:
+```rust
+
+const TILEMAPS: [&str; /*new number of levels*/] = [
+...
+
+    include_str!("../assets/<level_name>.json"),
+];
+```

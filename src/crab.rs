@@ -26,7 +26,7 @@ pub struct Crab {
 
 impl Crab {
     pub fn create() -> Self {
-        let (tiles, _) = &storage::get::<Assets>().tilemaps[storage::get::<Level>().0];
+        let tiles = &storage::get::<Assets>().tilemaps[storage::get::<Level>().0];
         Self {
             speed: 0,
             position: Vec2::new(
@@ -86,11 +86,11 @@ impl Node for Crab {
         // Gravity
         crab.position.y += 0.15;
 
-        let (tiles, item_position) = &storage::get::<Assets>().tilemaps[storage::get::<Level>().0];
+        let tiles = &storage::get::<Assets>().tilemaps[storage::get::<Level>().0];
 
         // 0 1
         // 2 3
-        let collide = |crab: &scene::RefMut<Crab>| {
+        let collide = |crab: &scene::RefMut<Crab>, name: &str| {
             [
                 (
                     (crab.position.x - 0.5).floor() as u32,
@@ -111,11 +111,11 @@ impl Node for Crab {
             ]
             .into_iter()
             .enumerate()
-            .filter_map(|(idx, (x, y))| tiles.get_tile("main", x, y).as_ref().map(|_| idx))
+            .filter_map(|(idx, (x, y))| tiles.get_tile(name, x, y).as_ref().map(|_| idx))
             .collect::<Vec<_>>()
         };
         let mut in_air = false;
-        crab.rotation = match &collide(&crab)[..] {
+        crab.rotation = match &collide(&crab, "main")[..] {
             [2, 3] | [2] | [3] => {
                 crab.position.y = (crab.position.y + 0.5).floor() - 0.5;
                 0.
@@ -138,13 +138,10 @@ impl Node for Crab {
             }
             collisions => unreachable!("{:?}", collisions),
         };
-        match &collide(&crab)[..] {
-            [0, 1] => {
-                crab.position.y = crab.position.y.floor() + 0.5;
-            }
-            _ => {}
+        if [0, 1] == collide(&crab, "main")[..] {
+            crab.position.y = crab.position.y.floor() + 0.5;
         }
-        if item_position.distance(crab.position) <= 1. {
+        if !collide(&crab, "diamond").is_empty() {
             play_sound_once(storage::get::<Assets>().item_picked);
             storage::store(level::State::Complete);
         }
@@ -231,25 +228,3 @@ fn get_controls() -> Controls {
 }
 
 const CRAB_SPEED: f32 = 0.75 / 60.;
-
-pub struct Item {
-    pub position: Vec2,
-}
-
-impl Node for Item {
-    fn draw(item: scene::RefMut<Self>)
-    where
-        Self: Sized,
-    {
-        draw_texture_ex(
-            storage::get::<Assets>().diamond,
-            item.position.x - 0.5,
-            item.position.y - 0.5,
-            WHITE,
-            DrawTextureParams {
-                dest_size: Some(Vec2::new(1., 1.)),
-                ..Default::default()
-            },
-        );
-    }
-}

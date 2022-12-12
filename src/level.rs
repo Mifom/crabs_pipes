@@ -8,10 +8,7 @@ use macroquad::{
 };
 use macroquad_tiled::Map;
 
-use crate::{
-    assets::Assets,
-    crab::{Crab, Item},
-};
+use crate::{assets::Assets, crab::Crab};
 
 pub struct Level(pub usize);
 pub enum State {
@@ -29,14 +26,11 @@ pub async fn loop_level(level: usize) -> bool {
             volume: 0.15,
         },
     );
-    let (tiles, item_position) = &storage::get::<Assets>().tilemaps[level];
+    let tiles = &storage::get::<Assets>().tilemaps[level];
     storage::store(Level(level));
     storage::store(State::Running);
     add_node(Tiles::create(tiles));
     add_node(Crab::create());
-    add_node(Item {
-        position: *item_position,
-    });
     let res = loop {
         clear_background(WHITE);
         next_frame().await;
@@ -73,7 +67,8 @@ impl Node for Tiles {
         Self: Sized,
     {
         let tiles = &storage::get::<Assets>().tilemaps[storage::get::<Level>().0];
-        tiles.0.draw_tiles("main", node.rect, None);
+        tiles.draw_tiles("main", node.rect, None);
+        tiles.draw_tiles("diamond", node.rect, None);
     }
 
     fn update(_node: scene::RefMut<Self>)
