@@ -159,12 +159,6 @@ impl Node for Crab {
                 },
             );
         }
-    }
-
-    fn update(crab: scene::RefMut<Self>)
-    where
-        Self: Sized,
-    {
         // Set proper camera
         let height = screen_height();
         let width = screen_width();
