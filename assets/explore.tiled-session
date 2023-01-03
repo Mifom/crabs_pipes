@@ -7,6 +7,7 @@
     "expandedProjectPaths": [
         "."
     ],
+    "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
         "basic.tsj": {
             "dynamicWrapping": false,
@@ -18,11 +19,11 @@
             "scaleInEditor": 1
         },
         "level.json": {
-            "scale": 0.46,
-            "selectedLayer": 1,
+            "scale": 0.0769,
+            "selectedLayer": 2,
             "viewCenter": {
-                "x": 947.8260869565217,
-                "y": 626.086956521739
+                "x": 4070.221066319896,
+                "y": 4811.443433029909
             }
         },
         "level.tmx": {
@@ -37,8 +38,8 @@
             "scale": 0.5531770833333333,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 961.717352415027,
-                "y": 639.9397420205254
+                "x": 3839.638452123153,
+                "y": 2557.9512286978634
             }
         },
         "level_2.tmx": {

@@ -27,12 +27,13 @@ pub struct Crab {
 impl Crab {
     pub fn create() -> Self {
         let tiles = &storage::get::<Assets>().tilemaps[storage::get::<Level>().0];
+        let (x, y) = tiles
+            .tiles("crab", None)
+            .find_map(|(x, y, tile)| tile.is_some().then_some((x, y)))
+            .expect("crab not found");
         Self {
             speed: 0,
-            position: Vec2::new(
-                (tiles.raw_tiled_map.width as f32) / 2.,
-                tiles.raw_tiled_map.height as f32 - 1.5,
-            ),
+            position: Vec2::new(x as f32 + 0.5, y as f32 + 0.5),
             rotation: 0.,
             animation: AnimatedSprite::new(
                 200,
@@ -138,6 +139,7 @@ impl Node for Crab {
             }
             collisions => unreachable!("{:?}", collisions),
         };
+        // Collide with ceiling after climbing
         if [0, 1] == collide(&crab, "main")[..] {
             crab.position.y = crab.position.y.floor() + 0.5;
         }
